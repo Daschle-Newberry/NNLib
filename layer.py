@@ -11,6 +11,7 @@ class Layer:
         self.w = None
         self.b = None
         self.activation = activations.get(activation)
+        self.activation_deriv = activations.get_deriv(activation)
 
         if self.activation == identity:
             raise Exception(f"Unknown activation function {activation}")
@@ -18,3 +19,9 @@ class Layer:
 
     def compute(self, x : np.ndarray):
         return self.activation(np.dot(x,self.w) + self.b)
+
+    def pre_activation(self, x : np.ndarray):
+        return np.dot(x,self.w) + self.b
+
+    def post_activation(self, x : np.ndarray):
+        return self.activation(x)
