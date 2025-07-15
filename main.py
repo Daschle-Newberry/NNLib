@@ -1,33 +1,20 @@
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 
-import activations
-import data
+from util.data import load_rand_circle, load_coffee
+from neuralnet.layer import Layer
+from neuralnet.neuralnetwork import NeuralNetwork
+from util.plotutils import plot_2d_scatter, plot_2d_heatmap
+
 # import tensorflow as tf
-
-# from keras.models import Sequential
 # from keras.layers import Dense
-import keras
-
-from layer import Layer
-from neuralnetwork import NeuralNetwork
-from plotutils import plot_2d_scatter
-
+# from keras.models import Sequential
 
 def main():
-    print(activations.get('MSE'))
+    X,y = load_coffee()
 
-    X,y = data.load_coffee()
+    X = (X - X.mean()) / X.std()
 
-    X2 = X.flatten()
-
-    n = (X2 - X2.min()) / (X2.max() - X2.min())
-
-    X = n.reshape(X.shape)
-
-    print(X)
-
-    print(y)
 
     network = NeuralNetwork(
             [
@@ -36,45 +23,21 @@ def main():
             ],'BCE'
     )
 
-    network.compile(2)
+    network.compile(input_size = 2)
+
+    print(network)
+    network.fit_stochastic(X,y,learning_rate = .01 , epochs = 10000)
 
 
-    print(network.get_weights(),"\n")
 
-    print(network.get_biases())
+    fig, ax = plt.subplots(1, 1, figsize=(10, 20))
 
-    network.fit(X,y,learning_rate = .1, epochs = 10000)
-
-    fig, ax = plt.subplots(1, 3, figsize=(10, 4))
-
-    plot_2d_scatter(X, y, ax[0])
-
+    plot_2d_heatmap(X, network, ax)
+    plot_2d_scatter(X,y,ax)
 
     plt.show()
 
 
-def calc_numerical_gradient(network : NeuralNetwork, x : np.ndarray, y : np.ndarray):
-    epsilon = .000000000001
-    yhat1 = network.predict(x)
 
-    original_weight = network.layers[0].w[0][0]
-    network.layers[0].w[0][0] = original_weight + epsilon
-
-    l1 = SE(yhat1, y)
-
-    network.layers[0].w[0][0] = original_weight - epsilon
-
-    yhat2 = network.predict(x)
-
-    l2 = SE(yhat2, y)
-
-
-
-    network.layers[0].w[0][0] = original_weight
-
-    return (l1 - l2) / (2 * epsilon)
-
-def SE(yHat : np.ndarray, y : np.ndarray):
-    return (yHat - y) ** 2
 if __name__ == "__main__":
     main()

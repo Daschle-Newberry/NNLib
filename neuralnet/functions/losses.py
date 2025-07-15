@@ -13,7 +13,7 @@ def get_deriv(a : str):
 
     }.get(a, None)
 def MSE(yHat : np.ndarray, y : np.ndarray):
-        return (yHat - y) ** 2
+        return np.mean((yHat - y) ** 2)
 
 def MSE_deriv(yHat : np.ndarray, y : np.ndarray):
     return 2 * (yHat - y)
@@ -21,7 +21,7 @@ def MSE_deriv(yHat : np.ndarray, y : np.ndarray):
 def BCE(yHat : np.ndarray, y : np.ndarray):
     epsilon = 1E-8
     yHat = np.clip(yHat, epsilon,1 - epsilon)
-    return -y * np.log(yHat) - (1 - y) * np.log(1 - yHat)
+    return np.mean(-y * np.log(yHat) - (1 - y) * np.log(1 - yHat))
 
 def BCE_deriv(yHat : np.ndarray, y : np.ndarray):
     epsilon = 1E-8
