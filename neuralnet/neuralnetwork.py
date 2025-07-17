@@ -4,15 +4,15 @@ import numpy.random
 
 from neuralnet.functions import losses
 from neuralnet.layer import Layer
+from neuralnet.logging.trainingmonitor import TrainingMonitor
 from neuralnet.optimizers import Optimizer
 
-
 class NeuralNetwork:
-    def __init__(self, layers : list[Layer], loss_func : str, optimizer : Optimizer):
+    def __init__(self, layers : list[Layer], loss_func : str):
         self.layers = layers
         self.loss = losses.get(loss_func)
         self.loss_deriv = losses.get_deriv(loss_func)
-        self.optimizer = optimizer
+        self.optimizer = None
         numpy.random.seed(1234)
 
     def __str__(self):
@@ -21,24 +21,23 @@ class NeuralNetwork:
             res += f"{i}" + (6 - len(str(i))) * " " + "             " + f"{layer.units}" + (9 - len(str(layer.units))) * " " + "             " + f"{layer.activation_type}" + (11 - len(str(layer.activation_type))) * " " + "\n"
 
         return res
-    def get_weights(self):
-        weights = []
-        for layer in self.layers:
-            weights.append(layer.w)
-        return weights
 
-    def get_biases(self):
-        biases = []
-        for layer in self.layers:
-            biases.append(layer.b)
-        return biases
+    def get_params(self):
+        return [layer.w for layer in self.layers], [layer.b for layer in self.layers]
 
 
-    def compile(self, input_size : int):
+    def compile(self, input_size : int, optimizer : Optimizer):
+        self.optimizer = optimizer
         for i, layer in enumerate(self.layers):
             input_dim = input_size if i == 0 else self.layers[i - 1].units
             layer.w = np.random.rand(input_dim, layer.units)
+            layer.dW = np.zeros_like(layer.w)
+
             layer.b = np.random.rand(layer.units)
+            layer.dB = np.zeros_like(layer.b)
+
+        w,b = self.get_params()
+        self.optimizer.compile(w,b)
 
     def predict(self, x : np.ndarray):
         a_i = x
@@ -46,81 +45,32 @@ class NeuralNetwork:
             a_i = layer.compute(a_i)
         return a_i
 
-    def fit_stochastic(
+    def fit(
             self,
             X : np.ndarray,
             y : np.ndarray,
-            learning_rate : float,
-            epochs : int
-    ) -> None:
-        """
-
-        Trains model using stochastic gradient descent. Model weights and biases are updated after each training sample.
-
-        :param X: Input features, shape (n_samples, n_features)
-        :param y: Desired outputs, shape (n_samples, n_outputs)
-        :param learning_rate: Scalar for gradients while learning
-        :param epochs: Amount of iterations through the training data
-        :return: None
-        """
-        for epoch in range(epochs):
-            if epoch % (.1 * epochs) == 0: print(f"\nEpoch : {epoch}")
-
-            #Shuffle the training data
-            indices = np.random.permutation(len(X))
-            X = X[indices]
-            y = y[indices]
-
-            cost = 0
-
-            #Loop over all training data and adjust gradients per sample
-            for i in range(0, len(X)):
-                a = self.forward(X[i])
-                cost += self.loss(a[-1], y[i])
-
-                g_w, g_b = self.backward(a, y[i])
-
-                for j, layer in enumerate(self.layers):
-                    step_w, step_b = self.optimizer.step(g_w[j],g_b[j],j)
-
-                    layer.w -= learning_rate * step_w
-                    layer.b -= learning_rate * step_b
-
-
-
-            print(f"\r Cost : {cost / len(X)}", end = '')
-
-
-
-    # Epoch: 900
-    # Cost: 0.04462793854352141
-    def fit_batched(
-            self,
-            X : np.ndarray,
-            y : np.ndarray,
-            learning_rate : float,
             epochs : int,
-            batch_size : int
+            batch_size : int = 32
     ) -> None:
         """
         Trains model using batched gradient descent. Model weights and biases are updated after each batch.
 
         :param X: Input features, shape (n_samples, n_features)
         :param y: Desired outputs, shape (n_samples, n_outputs)
-        :param learning_rate: Scalar for gradients while learning
         :param epochs: Amount of iterations through the training data
         :param batch_size: Number of sampler per training batch
         :return: None
         """
-        for epoch in range(epochs):
-            if epoch % (.1 * epochs) == 0: print(f"\nEpoch : {epoch}")
+
+        logger = TrainingMonitor(epochs,len(X) / batch_size)
+        for epoch in range(1,epochs + 1):
+
 
             indices = np.random.permutation(len(X))
             X = X[indices]
             y = y[indices]
 
             for batch_start in range(0, len(X), batch_size):
-                cost = 0
 
                 w_gradients = [np.zeros_like(layer.w) for layer in self.layers]
                 b_gradients = [np.zeros_like(layer.b) for layer in self.layers]
@@ -129,23 +79,23 @@ class NeuralNetwork:
                 batch_x = X[batch_start : batch_start + batch_size]
                 batch_y = y[batch_start : batch_start + batch_size]
 
-
+                cost = 0
                 for i in range(0, len(batch_x)):
                     a = self.forward(batch_x[i])
 
-                    cost += self.loss(a[-1], batch_y[i])
+                    cost  += self.loss(a[-1], batch_y[i])
 
-                    g_w, g_b = self.backward(a, y[i])
+                    g_w, g_b = self.backward(a, batch_y[i])
 
                     for j in range(len(g_w)):
-                        w_gradients[j] += g_w[j]
-                        b_gradients[j] += g_b[j]
+                        w_gradients[j] += g_w[j] / len(batch_x)
+                        b_gradients[j] += g_b[j] / len(batch_x)
 
-                for i, layer in enumerate(self.layers):
-                    layer.w -= (w_gradients[i] / len(batch_x)) * learning_rate
-                    layer.b -= (b_gradients[i] / len(batch_x)) * learning_rate
 
-                if batch_start % (batch_size / 2) == 0: print(f"\r Cost : {cost / len(batch_x)}", end = '')
+                self.optimizer.step(w_gradients, b_gradients)
+                cost /= len(batch_x)
+                logger.update(epoch,np.ceil(batch_start / batch_size), cost)
+
 
     def forward(
             self,

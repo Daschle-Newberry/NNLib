@@ -9,10 +9,14 @@ class Layer:
 
         self.w = None
         self.b = None
+
+        self.dW = None
+        self.dB = None
+
         self.activation = activations.get(activation)
         self.activation_deriv = activations.get_deriv(activation)
-
         self.activation_type = activation
+
 
     def compute(self, x : np.ndarray):
         return self.activation(np.dot(x,self.w) + self.b)

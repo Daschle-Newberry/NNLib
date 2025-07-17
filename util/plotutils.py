@@ -47,6 +47,6 @@ def plot_2d_heatmap(xy : np.ndarray,network, ax : axes):
 
     Z = np.array(Z)
     Z = Z.reshape(X.shape)
-    ax.contourf(X,Y,Z, levels = 100, cmap = "viridis")
+    ax.contourf(X,Y,Z, levels = 100, cmap = "inferno")
 
 

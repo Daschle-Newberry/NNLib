@@ -403,15 +403,34 @@ def load_coffee():
 0.0,])
 
     return X,y
+def load_rand_circles(count : int, min_radius : int, max_radius : int):
+    xy = np.random.uniform(low = -1, high = 1, size = (1000,2))
+
+    radii = np.random.uniform(low = min_radius, high = max_radius, size = (count,1))
+    centers =  np.random.uniform(low = -.6, high = .6, size = (count,2))
+
+
+    z = []
+    for point in xy:
+        deltas = centers - point
+        distances = np.linalg.norm(deltas, axis = 1)
+
+        if np.any(distances < radii):
+            z.append(1)
+        else:
+            z.append(0)
+    z = np.array(z)
+
+    return xy, z
 
 def load_rand_circle():
     xy = np.random.uniform(low = -1, high = 1, size = (1000,2))
 
     z = []
     for i in xy:
-        length = np.linalg.norm(i - np.array([.5,.5]))
-        length2 = np.linalg.norm(i + np.array([.5,.5]))
-        if length < .5 or length2 < .2:
+        length = np.linalg.norm(i - np.array([.5,0]))
+        length2 = np.linalg.norm(i + np.array([.5,0]))
+        if length < .5 or length2 < .5:
             z.append(1)
         else:
             z.append(0)
