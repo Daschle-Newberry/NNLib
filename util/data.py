@@ -403,7 +403,7 @@ def load_coffee():
 0.0,])
 
     return X,y
-def load_rand_circles(count : int, min_radius : int, max_radius : int):
+def load_rand_circles(count : int, min_radius : float, max_radius : float):
     xy = np.random.uniform(low = -1, high = 1, size = (1000,2))
 
     radii = np.random.uniform(low = min_radius, high = max_radius, size = (count,1))

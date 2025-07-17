@@ -1,4 +1,5 @@
 import numpy as np
+from scipy.special import expit
 
 def get(a : str):
     return{
@@ -22,8 +23,9 @@ def none(x : float):
 def none_deriv(x : float):
     return 1
 
-def sigmoid(x : float):
-    return 1 / (1 + np.exp(-x))
+def sigmoid(x : np.ndarray):
+    sig = expit(x)
+    return sig
 
 def sigmoid_deriv(x : np.ndarray):
     return x * (1 - x)

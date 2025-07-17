@@ -4,7 +4,10 @@ from neuralnet.functions import activations
 
 
 class Layer:
-    def __init__(self, units : int, activation : str):
+    def __init__(self, units : int, activation : str, name : str):
+
+        self.name = name
+
         self.units = units
 
         self.w = None
