@@ -37,7 +37,7 @@ def main():
     X = X.reshape((-1, 1, 28, 28))
     y = y.reshape(-1,1)
 
-    rms = NeuralNetwork(
+    model = NeuralNetwork(
         [
             Convolution((3,3),2,'valid'),
             ReLu(),
@@ -50,14 +50,10 @@ def main():
     )
 
 
-    rms.compile(input_size=(1,28,28), optimizer = Momentum(learning_rate=.01, beta = .99))
+    model.compile(input_size=(1,28,28), optimizer = Momentum(learning_rate=.01, beta = .99))
 
 
-    rms.fit(X,y, epochs = 10)
-
-
-    print(X[0].shape)
-
+    model.fit(X,y, epochs = 10)
 
 
     window = Window(725, 725)
@@ -68,12 +64,9 @@ def main():
     btn = Button((50, 50), (362, 600), (0, 0, 255))
     window.add_component(btn)
 
-    manager = NetworkUIManager(rms,db,btn, X_mean, X_std)
+    manager = NetworkUIManager(model,db,btn, X_mean, X_std)
 
     window.run()
-
-
-
 
 if __name__ == "__main__":
     main()
