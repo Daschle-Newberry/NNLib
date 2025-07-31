@@ -1,8 +1,8 @@
 import numpy as np
 from pygame import Surface
 
-from UI.uimath import bounding_box_check
-from UI.component import Component
+from ui.uimath import bounding_box_check
+from ui.component import Component
 import pygame
 
 from PIL import Image

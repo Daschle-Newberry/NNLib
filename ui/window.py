@@ -1,5 +1,5 @@
 import numpy as np
-from UI.component import Component
+from ui.component import Component
 import pygame
 import sys
 

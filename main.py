@@ -2,10 +2,10 @@ import numpy as np
 
 from keras.datasets import mnist
 
-from UI.button import Button
-from UI.drawingboard import DrawingBoard
-from UI.uimanager import NetworkUIManager
-from UI.window import Window
+from ui.button import Button
+from ui.drawingboard import DrawingBoard
+from ui.uimanager import NetworkUIManager
+from ui.window import Window
 from neuralnet.layers.convolution import Convolution
 from neuralnet.layers.flatten import Flatten
 from neuralnet.losses.losses import BinaryCrossEntropy

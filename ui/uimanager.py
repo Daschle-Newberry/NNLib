@@ -1,9 +1,9 @@
 import numpy as np
 from PIL import Image
 
-from UI.button import Button
-from UI.drawingboard import DrawingBoard
-from UI.uimath import convert_image_to_grayscale, invert_image
+from ui.button import Button
+from ui.drawingboard import DrawingBoard
+from ui.uimath import convert_image_to_grayscale, invert_image
 from neuralnet.neuralnetwork import NeuralNetwork
 
 
