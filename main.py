@@ -1,18 +1,27 @@
-import matplotlib.pyplot as plt
 import numpy as np
 
 from keras.datasets import mnist
-from neuralnet.optimizers import Optimizer, Momentum, Basic, RMSProp
-from util.data import load_rand_circle, load_coffee, load_rand_circles
-from neuralnet.layer import Layer
+
+from UI.button import Button
+from UI.drawingboard import DrawingBoard
+from UI.uimanager import NetworkUIManager
+from UI.window import Window
+from neuralnet.layers.convolution import Convolution
+from neuralnet.layers.flatten import Flatten
+from neuralnet.losses.losses import BinaryCrossEntropy
+from neuralnet.optimizers import RMSProp, SGD, Momentum
+from neuralnet.layers.dense import Dense
 from neuralnet.neuralnetwork import NeuralNetwork
-from util.plotutils import plot_2d_scatter, plot_2d_heatmap
+from neuralnet.layers.activations.relu import ReLu
+from neuralnet.layers.activations.sigmoid import Sigmoid
+
 
 
 def main():
     np.seterr(over='raise', divide='raise', invalid='raise')
+    np.random.seed(1234)
 
-    (X,y), (Xt, yt) = mnist.load_data()
+    (X, y), (Xt, yt) = mnist.load_data()
 
     filter = (y == 0) | (y == 1)
 
@@ -20,47 +29,49 @@ def main():
     y = y[filter]
 
     y = y.astype(np.float32)
+
+    X_mean = X.mean()
+    X_std = X.std()
     X = (X - X.mean()) / X.std()
 
-    filter_test = (yt == 0) | (yt == 1)
-    Xt = Xt[filter_test]
-    yt = yt[filter_test]
-
-    print(yt.max())
-    Xt = (Xt - Xt.mean())/ Xt.std()
-    Xt = Xt.reshape((-1,28*28))
-
-    X = X.reshape((-1,28*28))
-
-    print(X.shape)
+    X = X.reshape((-1, 1, 28, 28))
+    y = y.reshape(-1,1)
 
     rms = NeuralNetwork(
         [
-            Layer(128, 'relu', "layer1"),
-            Layer(64,'relu','layer2'),
-            Layer(1, "sigmoid",'layer3')
-        ], 'BCE'
+            Convolution((3,3),2,'valid'),
+            ReLu(),
+            Flatten(),
+            Dense(64,'layer1'),
+            ReLu(),
+            Dense(1, 'layer1'),
+            Sigmoid()
+        ], BinaryCrossEntropy()
     )
 
-    rms.compile(input_size=28 * 28, optimizer=RMSProp(learning_rate=.01,rho = .99))
 
-    rms.fit(X, y, epochs=10)
-
-
-    for i in range(0,10):
-        print(f"Test sample {i}, expected output {yt[i]}, got {rms.predict(Xt[i])}")
+    rms.compile(input_size=(1,28,28), optimizer = Momentum(learning_rate=.01, beta = .99))
 
 
+    rms.fit(X,y, epochs = 10)
 
 
-    # fig, ax = plt.subplots(1, 2, figsize=(20, 10))
-    #
-    # plot_2d_heatmap(X, rms, ax[0])
-    # plot_2d_scatter(X, y, ax[0])
-    #
-    # plot_2d_scatter(X, y, ax[1])
+    print(X[0].shape)
 
-    # plt.show()
+
+
+    window = Window(725, 725)
+
+    db = DrawingBoard((500, 500), (362, 300))
+    window.add_component(db)
+
+    btn = Button((50, 50), (362, 600), (0, 0, 255))
+    window.add_component(btn)
+
+    manager = NetworkUIManager(rms,db,btn, X_mean, X_std)
+
+    window.run()
+
 
 
 

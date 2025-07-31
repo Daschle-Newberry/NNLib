@@ -1,21 +1,24 @@
-from neuralnet.logging.counter import Counter
-from neuralnet.logging.progressbar import ProgressBar
+from neuralnet.logs.counter import Counter
+from neuralnet.logs.progressbar import ProgressBar
 
 
 class TrainingMonitor:
     def __init__(self, epochs : int, batches : int):
         self.counter = Counter("Epoch",epochs)
-        self.progress_bar = ProgressBar(10, batches)
+        self.progress_bar = ProgressBar(25, batches)
         self.loss_total = 0
         self.updates = 0
         self.loss_avg_prev = 0
-
+        self.is_Silent = False
 
     def update(self, epoch : int, batch : int, loss : float):
             self.loss_total += loss
             self.updates += 1
 
             loss_avg = self.loss_total / self.updates
+
+            if self.is_Silent:
+                return
             if self.counter.update(epoch):
                 print(self.counter)
 
@@ -25,3 +28,6 @@ class TrainingMonitor:
                 print()
 
             self.loss_avg_prev = loss_avg
+
+    def quiet(self):
+        self.is_Silent = True
