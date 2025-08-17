@@ -1,20 +1,13 @@
 import numpy as np
 
 from keras.datasets import mnist
+from matplotlib import pyplot as plt
 
-from ui.button import Button
-from ui.drawingboard import DrawingBoard
-from ui.uimanager import NetworkUIManager
-from ui.window import Window
-from neuralnet.layers.convolution import Convolution
-from neuralnet.layers.flatten import Flatten
-from neuralnet.losses.losses import BinaryCrossEntropy
-from neuralnet.optimizers import RMSProp, SGD, Momentum
-from neuralnet.layers.dense import Dense
-from neuralnet.neuralnetwork import NeuralNetwork
-from neuralnet.layers.activations.relu import ReLu
-from neuralnet.layers.activations.sigmoid import Sigmoid
+from NNLib.layers import Dense, Convolution, MaxPool, Flatten, ReLu
+from NNLib.losses import SoftMaxCrossEntropy
+from NNLib.optimizers.adam import Adam
 
+from NNLib.models import Sequential
 
 
 def main():
@@ -23,50 +16,54 @@ def main():
 
     (X, y), (Xt, yt) = mnist.load_data()
 
-    filter = (y == 0) | (y == 1)
+    X = X.reshape(-1,1,28,28)
 
-    X = X[filter]
-    y = y[filter]
+    Xt = Xt.reshape(-1,1,28,28)
 
-    y = y.astype(np.float32)
 
-    X_mean = X.mean()
-    X_std = X.std()
     X = (X - X.mean()) / X.std()
 
-    X = X.reshape((-1, 1, 28, 28))
-    y = y.reshape(-1,1)
+    Xt = (Xt - X.mean()) / X.std()
 
-    model = NeuralNetwork(
+
+    model = Sequential(
         [
-            Convolution((3,3),2,'valid'),
+            Convolution((3,3),8,'valid', 'layer0'),
             ReLu(),
+            MaxPool(2,2),
+            Convolution((3,3),16,'valid', 'layer1'),
+            ReLu(),
+            MaxPool(2,2),
             Flatten(),
-            Dense(64,'layer1'),
+            Dense(128,'layer3'),
             ReLu(),
-            Dense(1, 'layer1'),
-            Sigmoid()
-        ], BinaryCrossEntropy()
+            Dense(10, 'layer4'),
+        ], SoftMaxCrossEntropy()
     )
 
+    model.compile(input_size=(1,28,28), optimizer = Adam(learning_rate=.0001, beta1 = .9, beta2 = .99))
 
-    model.compile(input_size=(1,28,28), optimizer = Momentum(learning_rate=.01, beta = .99))
-
-
-    model.fit(X,y, epochs = 10)
+    cost_history = model.fit(X, y, epochs = 200, batch_size = 32)
 
 
-    window = Window(725, 725)
+    plt.xlabel("Epochs")
+    plt.ylabel("Cost")
+    plt.title("Cost per epoch")
+    plt.plot(cost_history)
 
-    db = DrawingBoard((500, 500), (362, 300))
-    window.add_component(db)
+    model_accuracy = test_model(model, Xt,yt)
 
-    btn = Button((50, 50), (362, 600), (0, 0, 255))
-    window.add_component(btn)
+    print(f"Model accuracy is {model_accuracy}")
 
-    manager = NetworkUIManager(model,db,btn, X_mean, X_std)
 
-    window.run()
+    plt.show()
+def test_model(model: Sequential, x_test, y_test):
+    prediction = np.argmax(model.predict(x_test), axis = 1)
+    accuracy = np.mean(prediction == y_test)
+
+    return accuracy
+
+
 
 if __name__ == "__main__":
     main()

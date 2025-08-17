@@ -1,12 +1,12 @@
 import numpy as np
 from matplotlib import  axes
 
-from neuralnet.neuralnetwork import NeuralNetwork
+from NNLib.models.sequential import Sequential
 
 def plot_2d_func(x : np.ndarray, y: np.ndarray, ax : axes):
     ax.plot(x,y)
 
-def plot_2d_network_func(x : np.ndarray, network : NeuralNetwork, ax : axes):
+def plot_2d_network_func(x : np.ndarray, network : Sequential, ax : axes):
     y = []
     for i in x:
         y.append(network.predict(i))
@@ -19,6 +19,7 @@ def plot_2d_scatter(xy : np.ndarray, z : np.ndarray, ax : axes):
     x_range = [x.min() - .5 * x.std(),x.max() + .5 * x.std()]
     y_range = [y.min() - .5 * y.std(),y.max() + .5 * y.std()]
 
+    z = z.reshape(-1)
     x0 = xy[z == 0]
 
     x1 = xy[z == 1]
@@ -42,10 +43,10 @@ def plot_2d_heatmap(xy : np.ndarray,network, ax : axes):
 
     coords = np.stack([X.ravel(), Y.ravel()], axis = 1)
 
-    Z = [network.predict(xy) for xy in coords]
+
+    Z = network.predict(coords)
 
 
-    Z = np.array(Z)
     Z = Z.reshape(X.shape)
     ax.contourf(X,Y,Z, levels = 100, cmap = "inferno")
 

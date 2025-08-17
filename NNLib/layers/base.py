@@ -1,48 +1,62 @@
+from abc import ABC, abstractmethod
+
 import numpy as np
 
 
-class Layer:
+class Layer(ABC):
+    @abstractmethod
     def compile(self, input_dim):
         pass
 
+    @abstractmethod
     def forward(self, x: np.ndarray):
-        raise NotImplementedError
+        pass
 
+    @abstractmethod
     def backward(self, output_gradients: np.ndarray):
-        raise NotImplementedError
+        pass
 
-
-class TrainableLayer(Layer):
     @property
+    @abstractmethod
+    def output_dim(self):
+        pass
+
+
+class TrainableLayer(Layer,ABC):
+    @property
+    @abstractmethod
     def weights(self):
-        raise NotImplementedError
+        pass
 
     @weights.setter
+    @abstractmethod
     def weights(self, w: np.ndarray):
-        raise NotImplementedError
+        pass
 
     @property
+    @abstractmethod
     def biases(self):
-        raise NotImplementedError
+        pass
 
     @biases.setter
+    @abstractmethod
     def biases(self, b: np.ndarray):
-        raise NotImplementedError
+        pass
 
     @property
+    @abstractmethod
     def w_gradients(self):
-        raise NotImplementedError
+        pass
 
     @property
+    @abstractmethod
     def b_gradients(self):
-        raise NotImplementedError
+        pass
 
-    @property
-    def output_dim(self):
-        raise NotImplementedError
 
 
 class UntrainableLayer(Layer):
+
     @property
     def weights(self):
         raise AttributeError("Untrainable layer has no weights")
@@ -66,7 +80,3 @@ class UntrainableLayer(Layer):
     @property
     def b_gradients(self):
         raise AttributeError("Untrainable layer has no bias gradients")
-
-    @property
-    def output_dim(self):
-        raise NotImplementedError

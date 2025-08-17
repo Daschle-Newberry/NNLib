@@ -29,7 +29,7 @@ class DrawingBoard(Component):
 
         if mouse_in_bounds and mouse_buttons[0]:
             local_mouse_pos = mouse_pos - self.position
-            pygame.draw.circle(self.canvas, 'Black', local_mouse_pos, 15)
+            pygame.draw.circle(self.canvas, 'Black', local_mouse_pos, 10)
         if mouse_in_bounds and mouse_buttons[2]:
             self.canvas.fill('White')
 

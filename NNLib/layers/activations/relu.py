@@ -1,6 +1,6 @@
 import numpy as np
 
-from neuralnet.layers.layer import Layer, UntrainableLayer
+from NNLib.layers.base import Layer, UntrainableLayer
 
 class ReLu(UntrainableLayer):
     def __init__(self):

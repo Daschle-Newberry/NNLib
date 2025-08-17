@@ -1,14 +1,13 @@
 import numpy as np
-from PIL import Image
 
 from ui.button import Button
 from ui.drawingboard import DrawingBoard
 from ui.uimath import convert_image_to_grayscale, invert_image
-from neuralnet.neuralnetwork import NeuralNetwork
+from NNLib.models.sequential import Sequential
 
 
 class NetworkUIManager:
-    def __init__(self, network : NeuralNetwork, drawing_board : DrawingBoard, button : Button, means, stds):
+    def __init__(self, network : Sequential, drawing_board : DrawingBoard, button : Button, means, stds):
         self.network = network
         self.drawing_board = drawing_board
         self.button = button
@@ -26,5 +25,5 @@ class NetworkUIManager:
         image  = invert_image(image)
         image = (image - self.mean) / self.std
 
-        image = image.reshape(1,28,28)
-        print(self.network.predict(image))
+        image = image.reshape(1,1,28,28)
+        print(np.argmax(self.network.predict(image)))
