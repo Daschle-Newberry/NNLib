@@ -7,7 +7,7 @@ NNLib is a lightweight python library use for building and training small neural
 
 ---
 NNLib is a passion project of mine, and was primarily an educational exercise to learn more about training and building neural networks.
-The project is completely standalone besides its use of numpy for numerical computation and matplotlib for data visualization.
+The project is completely standalone besides its use of NumPy for numerical computation and MatPlotLib for data visualization.
 
 
 ## How to Build
@@ -83,7 +83,7 @@ X = np.array([
 
 ---
 
-NNLib supports a variety of activations, optimizers, layer types, and loss functions. All of these features were implemented from scratch, and are all numerically stable.
+NNLib supports a variety of activations, optimizers, layer types, and loss functions. All of these features were implemented from scratch, and are all numerically stable, fully **batch** vectorized in NumPy, and ready for GPU acceleration. 
 
 ### Layer Types 
 
