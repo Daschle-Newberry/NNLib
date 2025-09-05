@@ -5,6 +5,5 @@ from .flatten import Flatten
 from .convolution import Convolution
 from .maxpool import MaxPool
 
-from .activations.relu import ReLu
-from .activations.sigmoid import Sigmoid
+
 

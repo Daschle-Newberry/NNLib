@@ -1,0 +1,24 @@
+# created by virtualenv automatically
+.venv/Lib
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+
+# Other
+*.log
+*.tmp
+
+.venv/
+venv/
+env/
+.env/
+
+mnist.npz

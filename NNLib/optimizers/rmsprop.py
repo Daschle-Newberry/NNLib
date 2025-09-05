@@ -1,4 +1,4 @@
-from NNLib.optimizers.base import Optimizer
+from .base import Optimizer
 import numpy as np
 
 

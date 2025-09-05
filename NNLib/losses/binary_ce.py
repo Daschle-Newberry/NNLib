@@ -1,5 +1,5 @@
 import numpy as np
-from NNLib.losses.base import LossFunction
+from NNLib.losses import LossFunction
 
 class BinaryCrossEntropy(LossFunction):
     def forward(self, yHat: np.ndarray, y: np.ndarray):

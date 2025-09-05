@@ -1,11 +1,11 @@
 import json
 
 import numpy as np
-from keras.datasets import mnist
-from matplotlib import pyplot as plt
-
 from NNLib.models import Sequential
-from NNLib.layers import Convolution, ReLu, MaxPool, Flatten, Dense
+from util.mnist_data import load_data
+from NNLib.layers import Convolution, MaxPool, Flatten, Dense
+from NNLib.layers.activations import ReLu
+
 from NNLib.losses import SoftMaxCrossEntropy
 from NNLib.optimizers import Adam
 from ui import Window, DrawingBoard, Button, NetworkUIManager
@@ -14,7 +14,7 @@ from ui import Window, DrawingBoard, Button, NetworkUIManager
 def main():
 
 
-    (X, y), (Xt, yt) = mnist.load_data()
+    (X, y), (Xt, yt) = load_data()
 
     X = X.reshape(-1, 1, 28, 28)
 
@@ -37,13 +37,13 @@ def main():
             ReLu(),
             MaxPool(2, 2),
             Flatten(),
-            Dense(128, 'layer3'),
+            Dense(128, 'layer2'),
             ReLu(),
-            Dense(10, 'layer4'),
+            Dense(10, 'layer3'),
         ], SoftMaxCrossEntropy()
     )
 
-    model.compile(input_size=(1, 28, 28), optimizer=Adam(learning_rate=.0001, beta1=.9, beta2=.99))
+    model.compile(input_size=(1, 28, 28), optimizer=Adam(learning_rate=.001, beta1=.9, beta2=.999))
 
 
 
@@ -84,4 +84,5 @@ def main():
 
     window.run()
 
-main()
+if __name__ == "__main__":
+    main()

@@ -1,11 +1,11 @@
 import json
 
 import matplotlib.pyplot as plt
-import util.plotutils
 import numpy as np
 
 from NNLib.models import Sequential
-from NNLib.layers import Dense, ReLu, Sigmoid
+from NNLib.layers import Dense
+from NNLib.layers.activations import ReLu, Sigmoid
 from NNLib.losses import BinaryCrossEntropy
 from NNLib.optimizers import Adam
 from util import plot_2d_scatter, plot_2d_heatmap
@@ -68,4 +68,5 @@ def main():
     plt.show()
 
 
-main()
+if __name__ == "__main__":
+    main()

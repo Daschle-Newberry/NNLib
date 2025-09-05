@@ -1,6 +1,6 @@
-from NNLib.logs.counter import Counter
-from NNLib.logs.cost_tracker import CostTracker
-from NNLib.logs.progress_bar import ProgressBar
+from . import Counter
+from . import CostTracker
+from . import ProgressBar
 
 
 class TrainingMonitor:
@@ -22,7 +22,6 @@ class TrainingMonitor:
 
             if self.cost_tracker.update(**kwargs) or self.progress_bar.update(**kwargs):
                 print(f"\r{self.progress_bar} {self.cost_tracker}", end = '')
-
 
 
     def get_cost_history(self):

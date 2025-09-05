@@ -26,6 +26,7 @@ class MaxPool(UntrainableLayer):
 
         self._output_dim = (input_depth, output_height, output_width)
 
+
     def forward(self, x: np.ndarray):
         self._input = x
         self._output = np.zeros((len(x), *self._output_dim))

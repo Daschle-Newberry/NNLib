@@ -1,8 +1,7 @@
 import numpy as np
 
 from NNLib.layers import Layer, TrainableLayer
-
-from NNLib.logs.training_monitor import TrainingMonitor
+from NNLib.logging import TrainingMonitor
 from NNLib.losses import LossFunction
 from NNLib.optimizers import Optimizer
 
@@ -334,7 +333,7 @@ class Sequential:
                 }
 
 
-    def set_params(self, params : dict[str, np.ndarray]):
+    def set_params(self, params : dict[str, list[np.ndarray]]):
         w = params.get('w')
         b = params.get('b')
 

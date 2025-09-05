@@ -1,6 +1,6 @@
 # NNLib
 
-NNLib is a lightweight python library use for building and training small neural networks.
+NNLib is a lightweight python library used for building and training small neural networks.
 
 
 ## About
@@ -23,9 +23,9 @@ git clone https://github.com/Daschle-Newberry/NNLib
 pip install numpy matplotlib
 ```
 
-3. **Optional:** if you would like to run the MNIST example, you will need to install tensorflow as it is the safest and easiest way to get access to the MNIST dataset
+3. **Optional:** if you would like to run the MNIST example, you will need to install pygame
 ```commandline
-pip install tensorflow
+pip install pygame
 ```
 
 ## Example
