@@ -17,7 +17,6 @@ class TrainingMonitor:
                 return
 
             if self.counter.update(**kwargs):
-                print()
                 print(self.counter)
 
             if self.cost_tracker.update(**kwargs) or self.progress_bar.update(**kwargs):

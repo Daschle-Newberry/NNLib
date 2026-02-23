@@ -23,9 +23,9 @@ git clone https://github.com/Daschle-Newberry/NNLib
 pip install numpy matplotlib
 ```
 
-3. **Optional:** if you would like to run the MNIST example, you will need to install pygame
+3. **Optional:** if you would like to run the MNIST example, you will need to install pygame and PyQt6
 ```commandline
-pip install pygame
+pip install pygame PyQt6
 ```
 
 ## Example

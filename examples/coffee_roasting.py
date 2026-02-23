@@ -1,3 +1,11 @@
+import os, sys
+
+dir_path = os.path.dirname(os.path.realpath(__file__))
+
+parent_dir_path = os.path.abspath(os.path.join(dir_path, os.pardir))
+
+sys.path.insert(0, parent_dir_path)
+
 import json
 
 import matplotlib.pyplot as plt
@@ -15,7 +23,7 @@ def main():
     np.seterr(over='raise', divide='raise', invalid='raise')
     np.random.seed(1234)
 
-    data = np.loadtxt("data/coffee_roasting.csv",delimiter = ",",skiprows = 1)
+    data = np.loadtxt("examples/data/coffee_roasting.csv",delimiter = ",",skiprows = 1)
 
     X = data[:,:2]
     y = data[:,2:]
@@ -46,7 +54,7 @@ def main():
         print("Training can take several minutes...")
         model.fit(X_tiled, y_tiled, epochs=30, batch_size=32)
     else:
-        with open("data/coffee_roasting_params.json", "r") as f:
+        with open("examples/data/coffee_roasting_params.json", "r") as f:
             params_loaded = json.load(f)
 
         params_loaded = {

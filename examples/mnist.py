@@ -1,3 +1,11 @@
+import os, sys
+
+dir_path = os.path.dirname(os.path.realpath(__file__))
+
+parent_dir_path = os.path.abspath(os.path.join(dir_path, os.pardir))
+
+sys.path.insert(0, parent_dir_path)
+
 import json
 
 import numpy as np
@@ -12,7 +20,6 @@ from ui import Window, DrawingBoard, Button, NetworkUIManager
 
 
 def main():
-
 
     (X, y), (Xt, yt) = load_data()
 
@@ -55,7 +62,7 @@ def main():
         model.fit(X, y, epochs = 100, batch_size = 64)
 
     else:
-        with open("data/mnist_params.json", "r") as f:
+        with open("examples/data/mnist_params.json", "r") as f:
             params_loaded = json.load(f)
 
         params_loaded = {
