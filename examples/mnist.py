@@ -50,9 +50,8 @@ def main():
         ], SoftMaxCrossEntropy()
     )
 
+    print(model)
     model.compile(input_size=(1, 28, 28), optimizer=Adam(learning_rate=.001, beta1=.9, beta2=.999))
-
-
 
     print("Would you like to train a fresh model? (y/n)")
     response = input()

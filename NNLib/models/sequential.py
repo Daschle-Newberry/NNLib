@@ -104,11 +104,9 @@ class Sequential:
             A history of the cost during training, as specified by the training logger used.
         """
 
-
         logger = TrainingMonitor(epochs,int(len(X) / batch_size))
 
-        for epoch in range(1,epochs + 1):
-
+        for epoch in range(1,epochs):
 
             indices = np.random.permutation(len(X))
             X = X[indices]
@@ -127,8 +125,8 @@ class Sequential:
 
                 self.optimizer.step(len(batch_x))
 
-                logger.update(epoch = epoch,batch = np.ceil(batch_start / batch_size), cost = cost)
-
+                is_final = batch_start >= len(X) - batch_size - 1 and epoch == epochs - 1
+                logger.update(is_final, epoch = epoch,batch = np.ceil(batch_start / batch_size), cost = cost)
 
         return logger.get_cost_history()
 

@@ -16,18 +16,18 @@ class ProgressBar:
 
     def update(self, **kwargs):
         step = kwargs.get(self.param_name)
-        step_prev = self.step
+
+        if(self.step == step): return False
+
+        self.prev_step = self.step
         self.step = step
 
         percentage_curr = self.step / self.total_steps
         progress_curr = int(percentage_curr * self.length)
 
-        percentage_prev = step_prev / self.total_steps
-        progress_prev = int(percentage_prev * self.length)
-
         self.is_full = self.step >= self.total_steps - 1
 
-        return progress_curr >= progress_prev
+        return True
 
     def clear(self):
         self.step = 0
