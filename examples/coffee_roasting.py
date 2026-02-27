@@ -44,7 +44,7 @@ def main():
     ],BinaryCrossEntropy()
     )
 
-    model.compile((2,), optimizer = Adam(learning_rate = .001, beta1 = .9, beta2 = .99))
+    model.compile((2,), optimizer = Adam(learning_rate = .001, beta1 = .9, beta2 = .98))
 
 
     print("Would you like to train a fresh model? (y/n)")
