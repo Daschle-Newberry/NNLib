@@ -20,12 +20,12 @@ git clone https://github.com/Daschle-Newberry/NNLib
 2. Install the dependencies
 
 ```commandline
-pip install numpy matplotlib
+pip install numpy matplotlib PyQt6
 ```
 
-3. **Optional:** if you would like to run the MNIST example, you will need to install pygame and PyQt6
-```commandline
-pip install pygame PyQt6
+3. **Optional:** if you would like to run the MNIST example, you will need to install pygame
+```commandliner
+pip install pygame
 ```
 
 ## Example
